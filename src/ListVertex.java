@@ -19,11 +19,11 @@ public class ListVertex implements Vertex{
         connections.add(new Connection(other, weight));
     }
 
-    private ListEdge connectionToEdge(Connection connection){
-        return new ListEdge(this, connection.neighbour, connection.weight);
+    private Edge<ListVertex> connectionToEdge(Connection connection){
+        return new Edge<>(this, connection.neighbour, connection.weight);
     }
 
-    public ListEdge getEdge(ListVertex other){
+    public Edge<ListVertex> getEdge(ListVertex other){
         for(Connection connection : connections){
             if(connection.neighbour==other){
                 return connectionToEdge(connection);
@@ -32,22 +32,22 @@ public class ListVertex implements Vertex{
         return null;
     }
 
-    public Iterable<ListEdge> edges(){
-        return new Iterable<ListEdge>() {
+    @Override
+    public Iterable<Edge<?>> edges(){
+        return ()->new Iterator<>() {
+            Iterator<Connection> connectionsIterator =connections.iterator();
             @Override
-            public Iterator<ListEdge> iterator() {
-                return new Iterator<ListEdge>() {
-                    Iterator<Connection> connectionsIterator =connections.iterator();
-                    @Override
-                    public boolean hasNext() {
-                        return connectionsIterator.hasNext();
-                    }
+            public boolean hasNext() {
+                return connectionsIterator.hasNext();
+            }
 
-                    @Override
-                    public ListEdge next() {
-                        return connectionToEdge(connectionsIterator.next());
-                    }
-                };
+            @Override
+            public Edge<?> next() {
+                if(hasNext()) {
+                    return connectionToEdge(connectionsIterator.next());
+                } else {
+                    return null;
+                }
             }
         };
     }

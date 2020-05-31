@@ -1,7 +1,6 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 
-public class ListGraph implements Graph<ListVertex, ListEdge> {
+public class ListGraph implements Graph<ListVertex> {
     private final ArrayList<ListVertex> vertices = new ArrayList<ListVertex>();
 
     public ListGraph() {
@@ -15,8 +14,8 @@ public class ListGraph implements Graph<ListVertex, ListEdge> {
     }
 
     @Override
-    public ListEdge addEdge(ListVertex start, ListVertex end, int weight) {
-        ListEdge edge = new ListEdge(start, end, weight);
+    public Edge<ListVertex> addEdge(ListVertex start, ListVertex end, int weight) {
+        Edge<ListVertex> edge = new Edge<>(start, end, weight);
         start.connect(end, weight);
         end.connect(start, weight);
         return edge;
@@ -32,40 +31,11 @@ public class ListGraph implements Graph<ListVertex, ListEdge> {
     }
 
     @Override
-    public ListEdge getEdge(ListVertex vertex1, ListVertex vertex2) {
+    public Edge<ListVertex> getEdge(ListVertex vertex1, ListVertex vertex2) {
         return vertex1.getEdge(vertex2);
     }
 
     public Iterable<ListVertex> vertices() {
         return this.vertices;
-    }
-
-    public Iterable<ListEdge> edges() {
-        return new Iterable<ListEdge>() {
-            @Override
-            public Iterator<ListEdge> iterator() {
-                return new Iterator<ListEdge>() {
-                    Iterator<ListVertex> verticesIterator=vertices.iterator();
-                    Iterator<ListEdge> neighboursIterator=null;
-
-                    @Override
-                    public boolean hasNext() {
-                        return neighboursIterator==null || neighboursIterator.hasNext() || verticesIterator.hasNext();
-                    }
-
-                    @Override
-                    public ListEdge next() {
-                        if(neighboursIterator==null || !neighboursIterator.hasNext()){
-                            if(verticesIterator.hasNext()){
-                                neighboursIterator=verticesIterator.next().edges().iterator();
-                            } else {
-                                return null;
-                            }
-                        }
-                        return neighboursIterator.next();
-                    }
-                };
-            }
-        };
     }
 }
