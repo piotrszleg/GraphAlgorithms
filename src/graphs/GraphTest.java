@@ -1,3 +1,5 @@
+package graphs;
+
 import java.util.HashSet;
 import java.util.stream.Stream;
 

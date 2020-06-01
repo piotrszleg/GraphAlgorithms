@@ -1,9 +1,11 @@
+package graphs;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 
 public class ListVertex implements Vertex{
 
-    class Connection {
+    static class Connection {
         final ListVertex neighbour;
         final int weight;
 

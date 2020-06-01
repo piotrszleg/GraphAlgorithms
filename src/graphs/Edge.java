@@ -1,6 +1,8 @@
+package graphs;
+
 import java.util.Objects;
 
-public class Edge<V> {
+public class Edge<V> implements Comparable<Edge> {
     private final V start;
     private final V end;
     private final int weight;
@@ -43,5 +45,10 @@ public class Edge<V> {
     public int hashCode() {
         // addition is alternating, so the order of start and end doesn't matter
         return Objects.hashCode(start)+Objects.hashCode(end)+Objects.hashCode(weight);
+    }
+
+    @Override
+    public int compareTo(Edge o) {
+        return this.weight-o.weight;
     }
 }

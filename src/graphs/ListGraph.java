@@ -1,4 +1,7 @@
+package graphs;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListGraph implements Graph<ListVertex> {
     private final ArrayList<ListVertex> vertices = new ArrayList<ListVertex>();
