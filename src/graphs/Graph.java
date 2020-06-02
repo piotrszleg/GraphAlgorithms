@@ -126,6 +126,15 @@ public interface Graph<V extends Vertex<I>, I> {
         };
     }
 
+    default V findVertex(I identifier){
+        for(V vertex : vertices()){
+            if(vertex.getIdentifier().equals(identifier)){
+                return vertex;
+            }
+        }
+        return null;
+    }
+
     default void prettyPrint(){
         System.out.print("V={");
         for(Vertex<I> vertex : vertices()){

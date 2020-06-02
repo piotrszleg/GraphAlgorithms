@@ -41,7 +41,7 @@ public class Edge<V extends Vertex<?>> implements Comparable<Edge<V>> {
         return weight == edge.weight && (inOrder || reversed);
     }
 
-    public boolean equivalent(Edge<?> other){
+    public boolean equivalent(Edge<V> other){
         boolean inOrder=start.corresponds(other.start) &&
                 end.corresponds(other.end);
 

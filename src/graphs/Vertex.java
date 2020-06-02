@@ -6,7 +6,7 @@ public interface Vertex<I> {
     Iterable<Edge<?>> edges();
     I getIdentifier();
 
-    default boolean corresponds(Vertex<I> other){
+    default <V extends Vertex<?>> boolean corresponds(V other){
         return Objects.equals(getIdentifier(), other.getIdentifier());
     }
 }
