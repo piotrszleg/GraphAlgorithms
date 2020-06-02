@@ -5,6 +5,7 @@ import java.util.*;
 public class MatrixGraph<I> implements Graph<MatrixVertex<I>, I>{
 
     // null represents vertices not being connected, otherwise it is their edge weight
+    @SuppressWarnings("unchecked")
     I[] vertices=(I[])new Object[4];
     Integer[] matrix=new Integer[16];
     int verticesCounter=0;
@@ -22,12 +23,12 @@ public class MatrixGraph<I> implements Graph<MatrixVertex<I>, I>{
     }
 
     @Override
-    public MatrixVertex<I> addVertex(I identifer) {
+    public MatrixVertex<I> addVertex(I identifier) {
         while(verticesCounter>=vertices.length){
             resize(vertices.length*2);
         }
-        vertices[verticesCounter]=identifer;
-        MatrixVertex<I> result=new MatrixVertex<I>(this, verticesCounter);
+        vertices[verticesCounter]=identifier;
+        MatrixVertex<I> result= new MatrixVertex<>(this, verticesCounter);
         verticesCounter++;
         return result;
     }
@@ -91,15 +92,16 @@ public class MatrixGraph<I> implements Graph<MatrixVertex<I>, I>{
     @Override
     public Iterable<MatrixVertex<I>> vertices() {
         MatrixGraph<I> graphThis=this;
-        return ()->new Iterator<MatrixVertex<I>>(){
-            int index=0;
+        return ()-> new Iterator<>() {
+            int index = 0;
+
             @Override
             public boolean hasNext() {
-                if(index>=vertices.length){
+                if (index >= vertices.length) {
                     return false;
                 }
-                for(int i=index; i<vertices.length; i++){
-                    if(vertices[i]!=null) {
+                for (int i = index; i < vertices.length; i++) {
+                    if (vertices[i] != null) {
                         return true;
                     }
                 }
@@ -108,8 +110,8 @@ public class MatrixGraph<I> implements Graph<MatrixVertex<I>, I>{
 
             @Override
             public MatrixVertex<I> next() {
-                if(hasNext()) {
-                    return new MatrixVertex<I>(graphThis, index++);
+                if (hasNext()) {
+                    return new MatrixVertex<>(graphThis, index++);
                 } else {
                     throw new NoSuchElementException();
                 }

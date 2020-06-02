@@ -1,7 +1,6 @@
 package graphs;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ListGraph<I> implements Graph<ListVertex<I>, I> {
     private final ArrayList<ListVertex<I>> vertices = new ArrayList<>();
@@ -11,7 +10,7 @@ public class ListGraph<I> implements Graph<ListVertex<I>, I> {
 
     @Override
     public ListVertex<I> addVertex(I identifier) {
-        ListVertex<I> vertex = new ListVertex<I>(identifier);
+        ListVertex<I> vertex = new ListVertex<>(identifier);
         this.vertices.add(vertex);
         return vertex;
     }

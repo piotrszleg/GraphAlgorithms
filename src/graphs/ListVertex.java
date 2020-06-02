@@ -15,8 +15,8 @@ public class ListVertex<I> implements Vertex<I>{
         }
     }
 
-    private LinkedList<Connection> connections=new LinkedList<>();
-    private I identifier;
+    private final LinkedList<Connection> connections=new LinkedList<>();
+    private final I identifier;
 
     public void connect(ListVertex<I> other, int weight){
         connections.add(new Connection(other, weight));
@@ -43,7 +43,7 @@ public class ListVertex<I> implements Vertex<I>{
     @Override
     public Iterable<Edge<?>> edges(){
         return ()->new Iterator<>() {
-            Iterator<Connection> connectionsIterator =connections.iterator();
+            final Iterator<Connection> connectionsIterator =connections.iterator();
             @Override
             public boolean hasNext() {
                 return connectionsIterator.hasNext();

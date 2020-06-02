@@ -8,10 +8,10 @@ import java.util.*;
 
 public class ShortestPath {
     static class Marking<V> {
-        V previous;
-        float distance;
-        V vertex;
-        int index;
+        final V previous;
+        final float distance;
+        final V vertex;
+        final int index;
 
         public Marking(V previous, float distance, V vertex, int index) {
             this.previous = previous;
@@ -23,7 +23,7 @@ public class ShortestPath {
     @SuppressWarnings("unchecked")
     public static <I, V extends Vertex<I>> List<V> shortestPath(Graph<V, I> graph, V start, V end) {
         HashMap<V, Marking<V>> markings=new HashMap<>();
-        TreeSet<Marking<V>> Q=new TreeSet<>((Comparator<Marking<V>>)(Marking<V> a, Marking<V> b)->{
+        TreeSet<Marking<V>> Q=new TreeSet<>((Marking<V> a, Marking<V> b)->{
             float distanceDifference=a.distance-b.distance;
             if(distanceDifference!=0 && !Float.isNaN(distanceDifference))
                 return (int)distanceDifference;

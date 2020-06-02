@@ -8,12 +8,12 @@ public class MatrixVertex<I> implements Vertex<I> {
     @Override
     public Iterable<Edge<?>> edges() {
         MatrixVertex<I> vertexThis=this;
-        return ()->new Iterator<Edge<?>>() {
-            int index=0;
+        return ()-> new Iterator<>() {
+            int index = 0;
 
-            boolean skip(){
-                for(; index<graph.vertices.length; index++){
-                    if(graph.connected(vertexThis, new MatrixVertex<I>(graph, index))){
+            boolean skip() {
+                for (; index < graph.vertices.length; index++) {
+                    if (graph.connected(vertexThis, new MatrixVertex<>(graph, index))) {
                         return true;
                     }
                 }
@@ -22,7 +22,7 @@ public class MatrixVertex<I> implements Vertex<I> {
 
             @Override
             public boolean hasNext() {
-                if(index>=graph.vertices.length){
+                if (index >= graph.vertices.length) {
                     return false;
                 }
                 return skip();
@@ -30,8 +30,8 @@ public class MatrixVertex<I> implements Vertex<I> {
 
             @Override
             public Edge<MatrixVertex<I>> next() {
-                if(hasNext()){
-                    return graph.getEdge(vertexThis, new MatrixVertex<I>(graph, index++));
+                if (hasNext()) {
+                    return graph.getEdge(vertexThis, new MatrixVertex<>(graph, index++));
                 } else {
                     throw new NoSuchElementException();
                 }
@@ -39,8 +39,8 @@ public class MatrixVertex<I> implements Vertex<I> {
         };
     }
 
-    MatrixGraph<I> graph;
-    int index;
+    final MatrixGraph<I> graph;
+    final int index;
 
     public MatrixVertex(MatrixGraph<I> graph, int index) {
         this.graph=graph;

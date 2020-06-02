@@ -28,7 +28,7 @@ class GraphTest {
         graph.addVertex('a');
         graph.addVertex('b');
         graph.addVertex('c');
-        HashSet<V> set = new HashSet<V>();
+        HashSet<V> set = new HashSet<>();
 
         for(V vertex : graph.vertices()) {
             assertTrue(graph.contains(vertex));

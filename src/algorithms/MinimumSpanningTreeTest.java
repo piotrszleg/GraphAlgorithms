@@ -1,7 +1,6 @@
 package algorithms;
 
 import graphs.*;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runner.RunWith;
@@ -18,11 +17,11 @@ class MinimumSpanningTreeTest {
     @SuppressWarnings("unchecked")
     static Stream<Graph<?, Character>[]> graphs(){
         ListGraph<Character>[] listGraphArguments=new ListGraph[2];
-        listGraphArguments[0]=new ListGraph<Character>();
-        listGraphArguments[1]=new ListGraph<Character>();
+        listGraphArguments[0]= new ListGraph<>();
+        listGraphArguments[1]= new ListGraph<>();
         MatrixGraph<Character>[] matrixGraphArguments=new MatrixGraph[2];
-        matrixGraphArguments[0]=new MatrixGraph<Character>();
-        matrixGraphArguments[1]=new MatrixGraph<Character>();
+        matrixGraphArguments[0]= new MatrixGraph<>();
+        matrixGraphArguments[1]= new MatrixGraph<>();
         return Stream.of(listGraphArguments, matrixGraphArguments);
     }
 

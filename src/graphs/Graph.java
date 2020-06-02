@@ -36,7 +36,7 @@ public interface Graph<V extends Vertex<I>, I> {
 
     default void addMatrix(I[] identifiers, Integer[][] matrix){
         int verticesCount=matrix[0].length;
-        ArrayList<V> vertices=new ArrayList<V>(verticesCount);
+        ArrayList<V> vertices= new ArrayList<>(verticesCount);
         for(int i=0; i<verticesCount; i++){
             vertices.add(addVertex(identifiers[i]));
         }
@@ -73,54 +73,54 @@ public interface Graph<V extends Vertex<I>, I> {
         return aEdgesCount!=bEdgesCount;
     }
 
-    default public Iterable<Edge<V>> edges() {
-        return () -> new Iterator<Edge<V>>() {
-            Iterator<V> verticesIterator = vertices().iterator();
+    default Iterable<Edge<V>> edges() {
+        return () -> new Iterator<>() {
+            final Iterator<V> verticesIterator = vertices().iterator();
             Iterator<Edge<?>> edgesIterator = null;
-            HashSet<Edge<?>> visited=new HashSet<>();
-            Edge<V> next=null;
+            final HashSet<Edge<?>> visited = new HashSet<>();
+            Edge<V> next = null;
 
-            void updateEdgesIterator(){
+            void updateEdgesIterator() {
                 if (edgesIterator == null || !edgesIterator.hasNext()) {
                     if (verticesIterator.hasNext()) {
                         edgesIterator = verticesIterator.next().edges().iterator();
                     } else {
-                        edgesIterator=null;
+                        edgesIterator = null;
                     }
                 }
             }
 
             @SuppressWarnings("unchecked")
-            Edge<V> fetchNext(){
-                if(next!=null){
+            Edge<V> fetchNext() {
+                if (next != null) {
                     return next;
                 }
                 updateEdgesIterator();
-                if(edgesIterator != null){
-                    next=(Edge<V>)edgesIterator.next();
-                    if(visited.contains(next)){
-                        next=null;
+                if (edgesIterator != null) {
+                    next = (Edge<V>) edgesIterator.next();
+                    if (visited.contains(next)) {
+                        next = null;
                         return fetchNext();
                     } else {
                         visited.add(next);
                         return next;
                     }
                 } else {
-                    next=null;
+                    next = null;
                     return null;
                 }
             }
 
             @Override
             public boolean hasNext() {
-                return fetchNext()!=null;
+                return fetchNext() != null;
             }
 
             @Override
             public Edge<V> next() {
-                Edge<V> result=fetchNext();
-                next=null;
-                if(result!=null){
+                Edge<V> result = fetchNext();
+                next = null;
+                if (result != null) {
                     return result;
                 } else {
                     throw new NoSuchElementException();
