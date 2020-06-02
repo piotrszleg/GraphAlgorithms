@@ -35,7 +35,7 @@ public class ShortestPath {
         int index=0;
         for(V vertex : graph.vertices()){
             Marking<V> marking;
-            if(vertex!=start) {
+            if(!vertex.equals(start)) {
                 if (graph.connected(start, vertex)) {
                     marking=new Marking<>(start, graph.weight(start, vertex), vertex, index++);
                 } else {
@@ -54,7 +54,7 @@ public class ShortestPath {
             V u=uMarking.vertex;
             for(Edge<?> edge : u.edges()){
                 V v=(V)edge.getEnd();
-                if(v==u){
+                if(v.equals(u)){
                     // in case the edge is flipped
                     v=(V)edge.getStart();
                 }

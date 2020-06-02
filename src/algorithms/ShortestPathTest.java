@@ -1,19 +1,26 @@
 package algorithms;
 
-import graphs.Graph;
-import graphs.ListGraph;
-import graphs.ListVertex;
-import graphs.Vertex;
+import graphs.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@RunWith(Parameterized.class)
 class ShortestPathTest {
+
+    static Stream<Graph<?, Character>> graphs(){
+        return Stream.of(new ListGraph<>(), new MatrixGraph<>());
+    }
 
     <V extends Vertex<I>, I> int pathDistance(Graph<V, I> graph, List<V> path){
         int result=0;
@@ -27,9 +34,9 @@ class ShortestPathTest {
         return result;
     }
 
-    @Test
-    void shortestPath() {
-        ListGraph<Character> graph=new ListGraph<>();
+    @ParameterizedTest
+    @MethodSource("graphs")
+    <V extends Vertex<Character>> void shortestPath(Graph<V, Character> graph) {
         Character[] letters=new Character[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
         graph.addMatrix(
                 letters,
@@ -44,10 +51,10 @@ class ShortestPathTest {
                 /*g*/{null, null, null, null, 8,    7,    null, 1   },
                 /*h*/{null, null, null, null, 2,    null, 1,    null},
         });
-        ListVertex<Character> start=graph.findVertex('a');
+        V start=graph.findVertex('a');
         BiConsumer<Character, Integer> checkDistance=(Character identifier, Integer expectedDistance)->{
-            ListVertex<Character> end=graph.findVertex(identifier);
-            List<ListVertex<Character>> path=ShortestPath.shortestPath(graph, start, end);
+            V end=graph.findVertex(identifier);
+            List<V> path=ShortestPath.shortestPath(graph, start, end);
             assertEquals(expectedDistance, pathDistance(graph, path));
         };
         checkDistance.accept('c', 5);

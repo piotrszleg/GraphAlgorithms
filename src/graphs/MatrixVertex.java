@@ -41,7 +41,6 @@ public class MatrixVertex<I> implements Vertex<I> {
 
     MatrixGraph<I> graph;
     int index;
-    I identifier;
 
     public MatrixVertex(MatrixGraph<I> graph, int index) {
         this.graph=graph;
@@ -60,7 +59,7 @@ public class MatrixVertex<I> implements Vertex<I> {
 
     @Override
     public I getIdentifier() {
-        return identifier;
+        return graph.vertices[index];
     }
 
     @Override
@@ -70,6 +69,6 @@ public class MatrixVertex<I> implements Vertex<I> {
 
     @Override
     public String toString() {
-        return identifier.toString();
+        return graph.vertices[index].toString();
     }
 }

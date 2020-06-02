@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 @RunWith(Parameterized.class)
 class GraphTest {
     static Stream<Graph<?, Character>> graphs(){
-        return Stream.of(new ListGraph<Character>(), new MatrixGraph<Character>());
+        return Stream.of(new ListGraph<>(), new MatrixGraph<>());
     }
 
     @ParameterizedTest
@@ -25,10 +25,10 @@ class GraphTest {
     @ParameterizedTest
     @MethodSource("graphs")
     <V extends Vertex<Character>> void verticesTest(Graph<V, Character> graph) {
-        Vertex vertex1 = graph.addVertex('a');
-        Vertex vertex2 = graph.addVertex('b');
-        Vertex vertex3 = graph.addVertex('c');
-        HashSet<Vertex> set = new HashSet<Vertex>();
+        graph.addVertex('a');
+        graph.addVertex('b');
+        graph.addVertex('c');
+        HashSet<V> set = new HashSet<V>();
 
         for(V vertex : graph.vertices()) {
             assertTrue(graph.contains(vertex));

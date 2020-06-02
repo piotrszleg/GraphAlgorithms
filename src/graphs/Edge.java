@@ -30,7 +30,7 @@ public class Edge<V extends Vertex<?>> implements Comparable<Edge<V>> {
     }
 
     public V otherEnd(V vertex){
-        if(start==vertex) return end;
+        if(start.equals(vertex)) return end;
         else return start;
     }
 
