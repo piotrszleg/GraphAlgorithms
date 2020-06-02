@@ -35,6 +35,11 @@ public class ListVertex<I> implements Vertex<I>{
         return null;
     }
 
+    void removeEdge(Edge<ListVertex<I>> edge){
+        ListVertex<I> otherEnd=edge.otherEnd(this);
+        connections.removeIf(connection -> connection.neighbour.equals(otherEnd));
+    }
+
     @Override
     public Iterable<Edge<?>> edges(){
         return ()->new Iterator<>() {

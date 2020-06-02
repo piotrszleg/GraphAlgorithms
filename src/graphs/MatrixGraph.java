@@ -58,6 +58,36 @@ public class MatrixGraph<I> implements Graph<MatrixVertex<I>, I>{
         }
     }
 
+    void checkDownsize(int index){
+        // the gap needs to be big enough to not waste allocations
+        if(index<vertices.length/4) {
+            // there must be no elements after index
+            for (int i = index; i < vertices.length; i++) {
+                if (vertices[i] != null){
+                    return;
+                }
+            }
+            resize(index);
+        }
+    }
+
+    @Override
+    public void removeVertex(MatrixVertex<I> vertex) {
+        // remove all edges containing vertex
+        for(int i=0; i<vertices.length; i++){
+            matrix[i+vertex.index*vertices.length]=null;
+            matrix[vertex.index+i*vertices.length]=null;
+        }
+        vertices[vertex.index]=null;
+        checkDownsize(vertex.index);
+    }
+
+    @Override
+    public void removeEdge(Edge<MatrixVertex<I>> edge) {
+        matrix[edge.getStart().index+edge.getEnd().index*vertices.length]=null;
+        matrix[edge.getEnd().index+edge.getStart().index*vertices.length]=null;
+    }
+
     @Override
     public Iterable<MatrixVertex<I>> vertices() {
         MatrixGraph<I> graphThis=this;

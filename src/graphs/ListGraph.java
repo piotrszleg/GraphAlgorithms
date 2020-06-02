@@ -38,6 +38,22 @@ public class ListGraph<I> implements Graph<ListVertex<I>, I> {
         return vertex1.getEdge(vertex2);
     }
 
+    @Override
+    public void removeVertex(ListVertex<I> vertex) {
+        for(Edge<ListVertex<I>> edge : edges()){
+            if(edge.contains(vertex)){
+                removeEdge(edge);
+            }
+        }
+        vertices.remove(vertex);
+    }
+
+    @Override
+    public void removeEdge(Edge<ListVertex<I>> edge) {
+        edge.getStart().removeEdge(edge);
+        edge.getEnd().removeEdge(edge);
+    }
+
     public Iterable<ListVertex<I>> vertices() {
         return this.vertices;
     }

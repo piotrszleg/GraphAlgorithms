@@ -25,6 +25,15 @@ public class Edge<V extends Vertex<?>> implements Comparable<Edge<V>> {
         return weight;
     }
 
+    public boolean contains(V vertex){
+        return start.equals(vertex) || end.equals(vertex);
+    }
+
+    public V otherEnd(V vertex){
+        if(start==vertex) return end;
+        else return start;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public boolean equals(Object o) {

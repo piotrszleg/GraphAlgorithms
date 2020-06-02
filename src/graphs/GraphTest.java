@@ -77,4 +77,35 @@ class GraphTest {
         assertEquals(edge2, edge1);
         assertEquals(edge1.hashCode(), edge2.hashCode());
     }
+
+    @ParameterizedTest
+    @MethodSource("graphs")
+    <V extends Vertex<Character>> void removeEdge(Graph<V, Character> graph) {
+        V a = graph.addVertex('a');
+        V b = graph.addVertex('b');
+        V c = graph.addVertex('c');
+        Edge<V> ab=graph.addEdge(a, b, 10);
+        Edge<V> bc=graph.addEdge(b, c, 5);
+        Edge<V> ca=graph.addEdge(c, a, 2);
+        graph.removeEdge(bc);
+        assertFalse(graph.contains(bc));
+        assertTrue(graph.contains(ab));
+        assertTrue(graph.contains(ca));
+    }
+
+    @ParameterizedTest
+    @MethodSource("graphs")
+    <V extends Vertex<Character>> void removeVertex(Graph<V, Character> graph) {
+        V a = graph.addVertex('a');
+        V b = graph.addVertex('b');
+        V c = graph.addVertex('c');
+        Edge<V> ab=graph.addEdge(a, b, 10);
+        Edge<V> bc=graph.addEdge(b, c, 5);
+        Edge<V> ca=graph.addEdge(c, a, 2);
+        graph.removeVertex(a);
+        assertFalse(graph.contains(a));
+        assertFalse(graph.contains(ab));
+        assertFalse(graph.contains(ca));
+        assertTrue(graph.contains(bc));
+    }
 }

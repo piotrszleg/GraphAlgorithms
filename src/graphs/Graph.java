@@ -29,6 +29,9 @@ public interface Graph<V extends Vertex<I>, I> {
         }
     }
 
+    void removeVertex(V vertex);
+    void removeEdge(Edge<V> edge);
+
     Iterable<V> vertices();
 
     default void addMatrix(I[] identifiers, Integer[][] matrix){
