@@ -2,7 +2,7 @@ package graphs;
 
 import java.util.Objects;
 
-public class Edge<V> implements Comparable<Edge> {
+public class Edge<V extends Vertex<?>> implements Comparable<Edge<V>> {
     private final V start;
     private final V end;
     private final int weight;
@@ -30,15 +30,25 @@ public class Edge<V> implements Comparable<Edge> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Edge)) return false;
-        Edge<V> listEdge = (Edge<V>) o;
+        Edge<V> edge = (Edge<V>) o;
 
-        boolean inOrder=Objects.equals(start, listEdge.start) &&
-                Objects.equals(end, listEdge.end);
+        boolean inOrder=Objects.equals(start, edge.start) &&
+                Objects.equals(end, edge.end);
 
-        boolean reversed=Objects.equals(start, listEdge.end) &&
-                Objects.equals(end, listEdge.start);
+        boolean reversed=Objects.equals(start, edge.end) &&
+                Objects.equals(end, edge.start);
 
-        return weight == listEdge.weight && (inOrder || reversed);
+        return weight == edge.weight && (inOrder || reversed);
+    }
+
+    public boolean equivalent(Edge<?> other){
+        boolean inOrder=start.corresponds(other.start) &&
+                end.corresponds(other.end);
+
+        boolean reversed=end.corresponds(other.start) &&
+                start.corresponds(other.end);
+
+        return weight == other.weight && (inOrder || reversed);
     }
 
     @Override
@@ -49,6 +59,18 @@ public class Edge<V> implements Comparable<Edge> {
 
     @Override
     public int compareTo(Edge o) {
-        return this.weight-o.weight;
+        int weightsDifference=this.weight-o.weight;
+        if(weightsDifference!=0) {
+            return weightsDifference;
+        } else if(equals(o)) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "("+start.toString()+", "+end.toString()+")";
     }
 }

@@ -2,10 +2,10 @@ package graphs;
 
 import java.util.*;
 
-public class MatrixGraph implements Graph<MatrixVertex>{
+public class MatrixGraph<I> implements Graph<MatrixVertex<I>, I>{
 
     // null represents vertices not being connected, otherwise it is their edge weight
-    boolean[] vertices=new boolean[4];
+    I[] vertices=(I[])new Object[4];
     Integer[] matrix=new Integer[16];
     int verticesCounter=0;
 
@@ -22,30 +22,30 @@ public class MatrixGraph implements Graph<MatrixVertex>{
     }
 
     @Override
-    public MatrixVertex addVertex() {
+    public MatrixVertex<I> addVertex(I identifer) {
         while(verticesCounter>=vertices.length){
             resize(vertices.length*2);
         }
-        vertices[verticesCounter]=true;
-        MatrixVertex result=new MatrixVertex(this, verticesCounter);
+        vertices[verticesCounter]=identifer;
+        MatrixVertex<I> result=new MatrixVertex<I>(this, verticesCounter);
         verticesCounter++;
         return result;
     }
 
     @Override
-    public Edge<MatrixVertex> addEdge(MatrixVertex vertex1, MatrixVertex vertex2, int weight) {
+    public Edge<MatrixVertex<I>> addEdge(MatrixVertex<I> vertex1, MatrixVertex<I> vertex2, int weight) {
         matrix[vertex1.index+vertex2.index*vertices.length]=weight;
         matrix[vertex1.index*vertices.length+vertex2.index]=weight;
         return new Edge<>(vertex1, vertex2, weight);
     }
 
     @Override
-    public boolean contains(MatrixVertex vertex) {
-        return vertex.index<vertices.length && vertices[vertex.index];
+    public boolean contains(MatrixVertex<I> vertex) {
+        return vertex.index<vertices.length && vertices[vertex.index]!=null;
     }
 
     @Override
-    public Edge<MatrixVertex> getEdge(MatrixVertex vertex1, MatrixVertex vertex2) {
+    public Edge<MatrixVertex<I>> getEdge(MatrixVertex<I> vertex1, MatrixVertex<I> vertex2) {
         int index=vertex1.index+vertex2.index*vertices.length;
         if(index>=matrix.length){
             return null;
@@ -59,9 +59,9 @@ public class MatrixGraph implements Graph<MatrixVertex>{
     }
 
     @Override
-    public Iterable<MatrixVertex> vertices() {
-        MatrixGraph graphThis=this;
-        return ()->new Iterator<MatrixVertex>(){
+    public Iterable<MatrixVertex<I>> vertices() {
+        MatrixGraph<I> graphThis=this;
+        return ()->new Iterator<MatrixVertex<I>>(){
             int index=0;
             @Override
             public boolean hasNext() {
@@ -69,7 +69,7 @@ public class MatrixGraph implements Graph<MatrixVertex>{
                     return false;
                 }
                 for(int i=index; i<vertices.length; i++){
-                    if(vertices[i]) {
+                    if(vertices[i]!=null) {
                         return true;
                     }
                 }
@@ -77,9 +77,9 @@ public class MatrixGraph implements Graph<MatrixVertex>{
             }
 
             @Override
-            public MatrixVertex next() {
+            public MatrixVertex<I> next() {
                 if(hasNext()) {
-                    return new MatrixVertex(graphThis, index++);
+                    return new MatrixVertex<I>(graphThis, index++);
                 } else {
                     throw new NoSuchElementException();
                 }

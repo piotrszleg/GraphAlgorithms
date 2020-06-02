@@ -11,23 +11,23 @@ import org.junit.runner.RunWith;
 
 @RunWith(Parameterized.class)
 class GraphTest {
-    static Stream<Graph<?>> graphs(){
-        return Stream.of(new ListGraph(), new MatrixGraph());
+    static Stream<Graph<?, Character>> graphs(){
+        return Stream.of(new ListGraph<Character>(), new MatrixGraph<Character>());
     }
 
     @ParameterizedTest
     @MethodSource("graphs")
-    <V extends Vertex> void addVertexTest(Graph<V> graph) {
-        V vertex = graph.addVertex();
+    <V extends Vertex<Character>> void addVertexTest(Graph<V, Character> graph) {
+        V vertex = graph.addVertex('a');
         assertTrue(graph.contains(vertex));
     }
 
     @ParameterizedTest
     @MethodSource("graphs")
-    <V extends Vertex> void verticesTest(Graph<V> graph) {
-        Vertex vertex1 = graph.addVertex();
-        Vertex vertex2 = graph.addVertex();
-        Vertex vertex3 = graph.addVertex();
+    <V extends Vertex<Character>> void verticesTest(Graph<V, Character> graph) {
+        Vertex vertex1 = graph.addVertex('a');
+        Vertex vertex2 = graph.addVertex('b');
+        Vertex vertex3 = graph.addVertex('c');
         HashSet<Vertex> set = new HashSet<Vertex>();
 
         for(V vertex : graph.vertices()) {
@@ -39,9 +39,9 @@ class GraphTest {
 
     @ParameterizedTest
     @MethodSource("graphs")
-    <V extends Vertex> void AddEdgeTest(Graph<V> graph) {
-        V vertex1 = graph.addVertex();
-        V vertex2 = graph.addVertex();
+    <V extends Vertex<Character>> void AddEdgeTest(Graph<V, Character> graph) {
+        V vertex1 = graph.addVertex('a');
+        V vertex2 = graph.addVertex('b');
         graph.addEdge(vertex1, vertex2, 11);
         assertTrue(graph.connected(vertex1, vertex2));
         assertEquals(11, graph.weight(vertex1, vertex2));
@@ -49,10 +49,10 @@ class GraphTest {
 
     @ParameterizedTest
     @MethodSource("graphs")
-    <V extends Vertex> void EdgesTest(Graph<V> graph) {
-        V vertex1 = graph.addVertex();
-        V vertex2 = graph.addVertex();
-        V vertex3 = graph.addVertex();
+    <V extends Vertex<Character>> void EdgesTest(Graph<V, Character> graph) {
+        V vertex1 = graph.addVertex('a');
+        V vertex2 = graph.addVertex('b');
+        V vertex3 = graph.addVertex('c');
         graph.addEdge(vertex1, vertex2, 10);
         graph.addEdge(vertex2, vertex3, 5);
         graph.addEdge(vertex3, vertex1, 2);
@@ -67,9 +67,9 @@ class GraphTest {
 
     @ParameterizedTest
     @MethodSource("graphs")
-    <V extends Vertex> void EdgesTwoSided(Graph<V> graph){
-        V vertex1 = graph.addVertex();
-        V vertex2 = graph.addVertex();
+    <V extends Vertex<Character>> void EdgesTwoSided(Graph<V, Character> graph){
+        V vertex1 = graph.addVertex('a');
+        V vertex2 = graph.addVertex('b');
         graph.addEdge(vertex1, vertex2, 10);
         Edge<V> edge1=graph.getEdge(vertex1, vertex2);
         Edge<V> edge2=graph.getEdge(vertex2, vertex1);

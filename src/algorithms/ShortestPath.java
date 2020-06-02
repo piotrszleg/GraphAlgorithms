@@ -19,7 +19,7 @@ public class ShortestPath {
         }
     }
     @SuppressWarnings("unchecked")
-    public static <V extends Vertex> List<V> shortestPath(Graph<V> graph, V start, V end) {
+    public static <I, V extends Vertex<I>> List<V> shortestPath(Graph<V, I> graph, V start, V end) {
         HashMap<V, Marking<V>> markings=new HashMap<>();
         TreeSet<Marking<V>> Q=new TreeSet<>(Comparator.comparing((Marking<V> marking)->marking.distance));
         for(V vertex : graph.vertices()){

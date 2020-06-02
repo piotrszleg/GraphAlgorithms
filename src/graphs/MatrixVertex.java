@@ -4,16 +4,16 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-public class MatrixVertex implements Vertex {
+public class MatrixVertex<I> implements Vertex<I> {
     @Override
     public Iterable<Edge<?>> edges() {
-        MatrixVertex vertexThis=this;
+        MatrixVertex<I> vertexThis=this;
         return ()->new Iterator<Edge<?>>() {
             int index=0;
 
             boolean skip(){
                 for(; index<graph.vertices.length; index++){
-                    if(graph.connected(vertexThis, new MatrixVertex(graph, index))){
+                    if(graph.connected(vertexThis, new MatrixVertex<I>(graph, index))){
                         return true;
                     }
                 }
@@ -29,9 +29,9 @@ public class MatrixVertex implements Vertex {
             }
 
             @Override
-            public Edge<MatrixVertex> next() {
+            public Edge<MatrixVertex<I>> next() {
                 if(hasNext()){
-                    return graph.getEdge(vertexThis, new MatrixVertex(graph, index++));
+                    return graph.getEdge(vertexThis, new MatrixVertex<I>(graph, index++));
                 } else {
                     throw new NoSuchElementException();
                 }
@@ -39,25 +39,37 @@ public class MatrixVertex implements Vertex {
         };
     }
 
-    MatrixGraph graph;
+    MatrixGraph<I> graph;
     int index;
+    I identifier;
 
-    public MatrixVertex(MatrixGraph graph, int index) {
+    public MatrixVertex(MatrixGraph<I> graph, int index) {
         this.graph=graph;
         this.index = index;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof MatrixVertex)) return false;
-        MatrixVertex that = (MatrixVertex) o;
+        MatrixVertex<I> that = (MatrixVertex<I>) o;
         return index == that.index &&
                 Objects.equals(graph, that.graph);
     }
 
     @Override
+    public I getIdentifier() {
+        return identifier;
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(graph, index);
+    }
+
+    @Override
+    public String toString() {
+        return identifier.toString();
     }
 }

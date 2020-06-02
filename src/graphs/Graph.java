@@ -1,10 +1,13 @@
 package graphs;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 
-public interface Graph<V extends Vertex> {
-    V addVertex();
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public interface Graph<V extends Vertex<I>, I> {
+    V addVertex(I identifier);
     Edge<V> addEdge(V vertex1, V vertex2, int weight);
 
     boolean contains(V vertex);
@@ -28,11 +31,11 @@ public interface Graph<V extends Vertex> {
 
     Iterable<V> vertices();
 
-    default void addMatrix(Integer[][] matrix){
+    default void addMatrix(I[] identifiers, Integer[][] matrix){
         int verticesCount=matrix[0].length;
         ArrayList<V> vertices=new ArrayList<V>(verticesCount);
         for(int i=0; i<verticesCount; i++){
-            vertices.add(addVertex());
+            vertices.add(addVertex(identifiers[i]));
         }
         for(int i=0; i<matrix.length; i++){
             for(int j=0; j<matrix.length; j++){
@@ -43,21 +46,36 @@ public interface Graph<V extends Vertex> {
         }
     }
 
-    /*default boolean defaultEquals(Object o){
-        if (this == o) return true;
-        if (!(o instanceof Edge)) return false;
-        Graph<?> graph = (Graph<?>) o;
-        for(Vertex v : this.vertices()){
-            for(Vertex u : graph.vertices()){
-                if(!v.equals(u))
+    static <V extends Vertex<I>, I> boolean equivalent(Graph<V, I> a, Graph<V, I> b){
+        if (a == b) return true;
+        int aEdgesCount=0;
+        int bEdgesCount=0;
+
+        for(Edge<V> aEdge : a.edges()){
+            bEdgesCount=0;
+            boolean equivalentFound=false;
+            for(Edge<V> bEdge : b.edges()){
+                if(aEdge.equivalent(bEdge)){
+                    equivalentFound=true;
+                    break;
+                }
+                bEdgesCount++;
             }
+            if(!equivalentFound){
+                return false;
+            }
+            aEdgesCount++;
         }
-    }*/
+        // from the equivalency of edges comes equal vertices count
+        return aEdgesCount!=bEdgesCount;
+    }
 
     default public Iterable<Edge<V>> edges() {
         return () -> new Iterator<Edge<V>>() {
             Iterator<V> verticesIterator = vertices().iterator();
             Iterator<Edge<?>> edgesIterator = null;
+            HashSet<Edge<?>> visited=new HashSet<>();
+            Edge<V> next=null;
 
             void updateEdgesIterator(){
                 if (edgesIterator == null || !edgesIterator.hasNext()) {
@@ -69,18 +87,54 @@ public interface Graph<V extends Vertex> {
                 }
             }
 
-            @Override
-            public boolean hasNext() {
+            @SuppressWarnings("unchecked")
+            Edge<V> fetchNext(){
+                if(next!=null){
+                    return next;
+                }
                 updateEdgesIterator();
-                return edgesIterator != null;
+                if(edgesIterator != null){
+                    next=(Edge<V>)edgesIterator.next();
+                    if(visited.contains(next)){
+                        next=null;
+                        return fetchNext();
+                    } else {
+                        visited.add(next);
+                        return next;
+                    }
+                } else {
+                    next=null;
+                    return null;
+                }
             }
 
             @Override
-            @SuppressWarnings("unchecked")
+            public boolean hasNext() {
+                return fetchNext()!=null;
+            }
+
+            @Override
             public Edge<V> next() {
-                updateEdgesIterator();
-                return (Edge<V>)edgesIterator.next();
+                Edge<V> result=fetchNext();
+                next=null;
+                if(result!=null){
+                    return result;
+                } else {
+                    throw new NoSuchElementException();
+                }
             }
         };
+    }
+
+    default void prettyPrint(){
+        System.out.print("V={");
+        for(Vertex<I> vertex : vertices()){
+            System.out.print(vertex);
+        }
+        System.out.print("}\nE={");
+        for(Edge<V> edge : edges()){
+            System.out.print(edge);
+        }
+        System.out.println("}");
     }
 }

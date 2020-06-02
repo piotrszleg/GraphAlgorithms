@@ -17,34 +17,32 @@ public class MinimumSpanningTree {
         }
     }
 
-    public static <SV extends Vertex, DV extends Vertex> Graph<DV> generate(Graph<SV> graph, Graph<DV> result){
-        HashMap<SV, Marking<SV, DV>> verticesSets=new HashMap<SV, Marking<SV, DV>>();
-        for(SV vertex : graph.vertices()){
-            Marking<SV, DV> marking =new Marking<>(vertex, result.addVertex());
+    public static <I, V extends Vertex<I>> Graph<V, I> generate(Graph<V, I> graph, Graph<V, I> result){
+        HashMap<V, Marking<V, V>> verticesSets=new HashMap<V, Marking<V, V>>();
+        for(V vertex : graph.vertices()){
+            Marking<V, V> marking =new Marking<>(vertex, result.addVertex(vertex.getIdentifier()));
             verticesSets.put(vertex, marking);
         }
-        TreeSet<Edge<SV>> edges=new TreeSet<>();
-        for(Edge<SV> edge : graph.edges()){
+        TreeSet<Edge<V>> edges=new TreeSet<>();
+        for(Edge<V> edge : graph.edges()){
             edges.add(edge);
         }
         while(!edges.isEmpty()) {
-            Edge<SV> edge=edges.first();
+            Edge<V> edge=edges.first();
             edges.remove(edge);
-            Marking<SV, DV> startMarking =verticesSets.get(edge.getStart());
-            Marking<SV, DV> endMarking =verticesSets.get(edge.getEnd());
+            Marking<V, V> startMarking =verticesSets.get(edge.getStart());
+            Marking<V, V> endMarking =verticesSets.get(edge.getEnd());
             if(!startMarking.set.equals(endMarking.set)){
                 // sets union
                 startMarking.set.addAll(endMarking.set);
-                endMarking.set= startMarking.set;
+                HashSet<V> oldEndMarkingSet=endMarking.set;
+                for(V vertex : oldEndMarkingSet){
+                    verticesSets.get(vertex).set=startMarking.set;
+                }
                 // add the edge to result graph
                 result.addEdge(startMarking.correspondingVertex, endMarking.correspondingVertex, edge.getWeight());
             }
         }
         return result;
-    }
-
-    public static <V extends Vertex> ListGraph generate(Graph<V> graph){
-        Graph<ListVertex> result=new ListGraph();
-        return (ListGraph)generate(graph, result);
     }
 }

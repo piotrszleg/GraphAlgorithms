@@ -3,29 +3,30 @@ package graphs;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class ListVertex implements Vertex{
+public class ListVertex<I> implements Vertex<I>{
 
-    static class Connection {
-        final ListVertex neighbour;
+    class Connection {
+        final ListVertex<I> neighbour;
         final int weight;
 
-        public Connection(ListVertex neighbour, int weight) {
+        public Connection(ListVertex<I> neighbour, int weight) {
             this.neighbour = neighbour;
             this.weight = weight;
         }
     }
 
     private LinkedList<Connection> connections=new LinkedList<>();
+    private I identifier;
 
-    public void connect(ListVertex other, int weight){
+    public void connect(ListVertex<I> other, int weight){
         connections.add(new Connection(other, weight));
     }
 
-    private Edge<ListVertex> connectionToEdge(Connection connection){
+    private Edge<ListVertex<I>> connectionToEdge(Connection connection){
         return new Edge<>(this, connection.neighbour, connection.weight);
     }
 
-    public Edge<ListVertex> getEdge(ListVertex other){
+    public Edge<ListVertex<I>> getEdge(ListVertex<I> other){
         for(Connection connection : connections){
             if(connection.neighbour==other){
                 return connectionToEdge(connection);
@@ -54,7 +55,17 @@ public class ListVertex implements Vertex{
         };
     }
 
-    public ListVertex(){
+    @Override
+    public I getIdentifier() {
+        return identifier;
+    }
 
+    public ListVertex(I identifier){
+        this.identifier=identifier;
+    }
+
+    @Override
+    public String toString() {
+        return identifier.toString();
     }
 }
