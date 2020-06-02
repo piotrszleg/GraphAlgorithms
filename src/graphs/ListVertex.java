@@ -17,13 +17,14 @@ public class ListVertex<I> implements Vertex<I>{
 
     private final LinkedList<Connection> connections=new LinkedList<>();
     private final I identifier;
+    boolean directed;
 
     public void connect(ListVertex<I> other, int weight){
         connections.add(new Connection(other, weight));
     }
 
     private Edge<ListVertex<I>> connectionToEdge(Connection connection){
-        return new Edge<>(this, connection.neighbour, connection.weight);
+        return new Edge<>(this, connection.neighbour, connection.weight, directed);
     }
 
     public Edge<ListVertex<I>> getEdge(ListVertex<I> other){
@@ -65,8 +66,9 @@ public class ListVertex<I> implements Vertex<I>{
         return identifier;
     }
 
-    public ListVertex(I identifier){
+    public ListVertex(I identifier, boolean directed){
         this.identifier=identifier;
+        this.directed=directed;
     }
 
     @Override

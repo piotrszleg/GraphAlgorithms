@@ -6,11 +6,13 @@ public class Edge<V extends Vertex<?>> implements Comparable<Edge<V>> {
     private final V start;
     private final V end;
     private final int weight;
+    boolean directed;
 
-    public Edge(V start, V end, int weight) {
+    public Edge(V start, V end, int weight, boolean directed) {
         this.start = start;
         this.end = end;
         this.weight=weight;
+        this.directed=directed;
     }
 
     public V getStart() {
@@ -44,8 +46,9 @@ public class Edge<V extends Vertex<?>> implements Comparable<Edge<V>> {
         boolean inOrder=Objects.equals(start, edge.start) &&
                 Objects.equals(end, edge.end);
 
-        boolean reversed=Objects.equals(start, edge.end) &&
-                Objects.equals(end, edge.start);
+        boolean reversed= !directed
+                && Objects.equals(start, edge.end)
+                && Objects.equals(end, edge.start);
 
         return weight == edge.weight && (inOrder || reversed);
     }
@@ -54,8 +57,9 @@ public class Edge<V extends Vertex<?>> implements Comparable<Edge<V>> {
         boolean inOrder=start.corresponds(other.start) &&
                 end.corresponds(other.end);
 
-        boolean reversed=end.corresponds(other.start) &&
-                start.corresponds(other.end);
+        boolean reversed= !directed
+                && end.corresponds(other.start)
+                && start.corresponds(other.end);
 
         return weight == other.weight && (inOrder || reversed);
     }

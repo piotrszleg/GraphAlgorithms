@@ -10,6 +10,14 @@ public class MatrixGraph<I> implements Graph<MatrixVertex<I>, I>{
     Integer[] matrix=new Integer[16];
     int verticesCounter=0;
 
+    public MatrixGraph() {
+    }
+
+    boolean directed;
+    public MatrixGraph(boolean directed) {
+        this.directed=directed;
+    }
+
     void resize(int newVerticesCount){
         Integer[] newMatrix=new Integer[newVerticesCount*newVerticesCount];
         // unset weights are null by default
@@ -36,8 +44,9 @@ public class MatrixGraph<I> implements Graph<MatrixVertex<I>, I>{
     @Override
     public Edge<MatrixVertex<I>> addEdge(MatrixVertex<I> vertex1, MatrixVertex<I> vertex2, int weight) {
         matrix[vertex1.index+vertex2.index*vertices.length]=weight;
+        if(!directed)
         matrix[vertex1.index*vertices.length+vertex2.index]=weight;
-        return new Edge<>(vertex1, vertex2, weight);
+        return new Edge<>(vertex1, vertex2, weight, directed);
     }
 
     @Override
@@ -53,7 +62,7 @@ public class MatrixGraph<I> implements Graph<MatrixVertex<I>, I>{
         }
         Integer weight=matrix[index];
         if(weight!=null){
-            return new Edge<>(vertex1, vertex2, weight);
+            return new Edge<>(vertex1, vertex2, weight, directed);
         } else {
             return null;
         }
@@ -117,5 +126,10 @@ public class MatrixGraph<I> implements Graph<MatrixVertex<I>, I>{
                 }
             }
         };
+    }
+
+    @Override
+    public boolean isDirected() {
+        return directed;
     }
 }

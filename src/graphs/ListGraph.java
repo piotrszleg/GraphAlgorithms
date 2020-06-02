@@ -4,22 +4,28 @@ import java.util.ArrayList;
 
 public class ListGraph<I> implements Graph<ListVertex<I>, I> {
     private final ArrayList<ListVertex<I>> vertices = new ArrayList<>();
+    boolean directed;
+
+    public ListGraph(Boolean directed){
+        this.directed=directed;
+    }
 
     public ListGraph() {
     }
 
     @Override
     public ListVertex<I> addVertex(I identifier) {
-        ListVertex<I> vertex = new ListVertex<>(identifier);
+        ListVertex<I> vertex = new ListVertex<>(identifier, directed);
         this.vertices.add(vertex);
         return vertex;
     }
 
     @Override
     public Edge<ListVertex<I>> addEdge(ListVertex<I> start, ListVertex<I> end, int weight) {
-        Edge<ListVertex<I>> edge = new Edge<>(start, end, weight);
+        Edge<ListVertex<I>> edge = new Edge<>(start, end, weight, directed);
         start.connect(end, weight);
-        end.connect(start, weight);
+        if(!directed)
+            end.connect(start, weight);
         return edge;
     }
 
@@ -55,5 +61,10 @@ public class ListGraph<I> implements Graph<ListVertex<I>, I> {
 
     public Iterable<ListVertex<I>> vertices() {
         return this.vertices;
+    }
+
+    @Override
+    public boolean isDirected() {
+        return directed;
     }
 }

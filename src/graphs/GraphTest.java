@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 @RunWith(Parameterized.class)
 class GraphTest {
     static Stream<Graph<?, Character>> graphs(){
-        return Stream.of(new ListGraph<>(), new MatrixGraph<>());
+        return Stream.of(new ListGraph<>(), new MatrixGraph<>(), new ListGraph<>(true), new MatrixGraph<>(true));
     }
 
     @ParameterizedTest
@@ -73,9 +73,15 @@ class GraphTest {
         graph.addEdge(vertex1, vertex2, 10);
         Edge<V> edge1=graph.getEdge(vertex1, vertex2);
         Edge<V> edge2=graph.getEdge(vertex2, vertex1);
-        assertEquals(edge1, edge2);
-        assertEquals(edge2, edge1);
-        assertEquals(edge1.hashCode(), edge2.hashCode());
+        if(graph.isDirected()) {
+            assertNull(edge2);
+            edge2=graph.addEdge(vertex2, vertex1, 10);
+            assertNotEquals(edge1, edge2);
+        } else {
+            assertEquals(edge1, edge2);
+            assertEquals(edge2, edge1);
+            assertEquals(edge1.hashCode(), edge2.hashCode());
+        }
     }
 
     @ParameterizedTest

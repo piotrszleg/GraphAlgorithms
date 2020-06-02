@@ -8,7 +8,7 @@ public class MatrixVertex<I> implements Vertex<I> {
     @Override
     public Iterable<Edge<?>> edges() {
         MatrixVertex<I> vertexThis=this;
-        return ()-> new Iterator<>() {
+        return ()-> new Iterator<Edge<?>>() {
             int index = 0;
 
             boolean skip() {

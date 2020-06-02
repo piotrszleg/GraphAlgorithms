@@ -74,7 +74,7 @@ public interface Graph<V extends Vertex<I>, I> {
     }
 
     default Iterable<Edge<V>> edges() {
-        return () -> new Iterator<>() {
+        return () -> new Iterator<Edge<V>>() {
             final Iterator<V> verticesIterator = vertices().iterator();
             Iterator<Edge<?>> edgesIterator = null;
             final HashSet<Edge<?>> visited = new HashSet<>();
@@ -149,4 +149,6 @@ public interface Graph<V extends Vertex<I>, I> {
         }
         System.out.println("}");
     }
+
+    boolean isDirected();
 }
